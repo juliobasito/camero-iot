@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout, $http, $state) {
+.controller('AppCtrl', function($scope, $ionicModal, $timeout, $http, $state, UserSrv) {
 
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -9,9 +9,12 @@ angular.module('starter.controllers', [])
   //$scope.$on('$ionicView.enter', function(e) {
   //});
 
+
   // Form data for the login modal
   $scope.loginData = {};
   $scope.registerData = {};
+  $scope.test = UserSrv.user;
+  $scope.token = UserSrv.token;  
 
   // Create the login modal that we will use later
   $ionicModal.fromTemplateUrl('templates/login.html', {
@@ -31,21 +34,23 @@ angular.module('starter.controllers', [])
   };
 
   // Perform the login action when the user submits the login form
-  $scope.doLogin = function() {
-    $http({
-        method: 'POST',
-        url: 'http://localhost:1337/auth/signin',
-        data: {password: $scope.loginData.password,
-            identifier: $scope.loginData.username}
-    }).then(function successCallback(response) {(
-        console.log(response),
-        $scope.token = response.data.token,
-        $scope.username = response.data.user.username,
-        $state.go('app.user'))
-    }, function () {
-        console.log("bite");
-    });
-  };
+    $scope.doLogin = function() {
+        UserSrv.doLogin($scope.loginData.username,$scope.loginData.password).then(function(data){
+            console.log('ok');
+            console.log(data);
+            $state.go('app.user');
+        },
+            function(){
+                console.log('KO')
+            }
+        );
+    }
+
+    $scope.loginData = {
+        username : "tharsan4",
+        password : "password"
+    }
+
     $scope.doSignUp = function() {
         $http({
             method: 'POST',
@@ -60,7 +65,7 @@ angular.module('starter.controllers', [])
                 console.log(response),
                 $state.go('app.login'))
         }, function () {
-            console.log("bite");
+            console.log("rate");
         });
     };
 })
@@ -79,11 +84,17 @@ angular.module('starter.controllers', [])
 .controller('PlaylistCtrl', function($scope, $stateParams) {
 })
 
-.controller('User', function($scope) {
+.controller('User', function($scope, $ionicHistory) {
+    console.log($scope.username);
 })
 
 .controller('signupCtrl', function($scope) {
 })
+
+.controller('cameraCtrl', function($scope) {
+
+})
+
 
 .controller('loginCtrl', function($scope, $http) {
   $scope.getUsers = function(){
