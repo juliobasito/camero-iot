@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout) {
+.controller('AppCtrl', function($scope, $ionicModal, $timeout, $http, $state) {
 
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -31,10 +31,20 @@ angular.module('starter.controllers', [])
 
   // Perform the login action when the user submits the login form
   $scope.doLogin = function() {
-    console.log('Doing login', $scope.loginData);
+    $http({
+        method: 'POST',
+        url: 'http://localhost:1337/auth/signin',
+        data: {password: $scope.loginData.password,
+            identifier: $scope.loginData.username}
+    }).then(function successCallback(response) {(
+        console.log(response),
+        $scope.token = response.data.token,
+        $scope.username = response.data.user.username,
+        $state.go('app.user'))
+    }, function () {
+        console.log("bite");
+    });
 
-    // Simulate a login delay. Remove this and replace with your login
-    // code if using a login system
     $timeout(function() {
       $scope.closeLogin();
     }, 1000);
@@ -53,4 +63,20 @@ angular.module('starter.controllers', [])
 })
 
 .controller('PlaylistCtrl', function($scope, $stateParams) {
+})
+
+.controller('User', function($scope) {
+})
+
+.controller('loginCtrl', function($scope, $http) {
+  $scope.getUsers = function(){
+    /*$http.get('http://localhost:1337/user', { headers : { 'Authorization' : 'JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXJuYW1lIjoidGhhcnNhbjUiLCJlbWFpbCI6Imp1bGlvbGVtZWdhYm9zc0BqdWxpby5mciIsImZpcnN0TmFtZSI6IiIsImxhc3ROYW1lIjoiIiwiaWQiOjJ9LCJpYXQiOjE0NzYzNzA1MTF9.G9Xtxg7bf6Uv3H33W8IBWT0IZTKOenULg7LKbMMDCZg'} })
+        .then(function successCallback(response) {
+      $scope.users = response.data;
+          console.log($scope.users);
+
+    });*/
+
+  };
+  $scope.getUsers();
 });
