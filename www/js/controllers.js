@@ -11,6 +11,7 @@ angular.module('starter.controllers', [])
 
   // Form data for the login modal
   $scope.loginData = {};
+  $scope.registerData = {};
 
   // Create the login modal that we will use later
   $ionicModal.fromTemplateUrl('templates/login.html', {
@@ -44,11 +45,24 @@ angular.module('starter.controllers', [])
     }, function () {
         console.log("bite");
     });
-
-    $timeout(function() {
-      $scope.closeLogin();
-    }, 1000);
   };
+    $scope.doSignUp = function() {
+        $http({
+            method: 'POST',
+            url: 'http://localhost:1337/auth/signup',
+            data: {username: $scope.registerData.username
+                ,
+                password: $scope.registerData.password,
+                email: $scope.registerData.email,
+                lastname: $scope.registerData.lastname,
+                firstname: $scope.registerData.firstname}
+        }).then(function successCallback(response) {(
+                console.log(response),
+                $state.go('app.login'))
+        }, function () {
+            console.log("bite");
+        });
+    };
 })
 
 .controller('PlaylistsCtrl', function($scope) {
@@ -66,6 +80,9 @@ angular.module('starter.controllers', [])
 })
 
 .controller('User', function($scope) {
+})
+
+.controller('signupCtrl', function($scope) {
 })
 
 .controller('loginCtrl', function($scope, $http) {
