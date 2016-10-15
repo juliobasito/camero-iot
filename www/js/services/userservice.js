@@ -3,6 +3,7 @@ angular.module('starter.services.userservice', [])
 .service('UserSrv', function($http,$q){
     var token = null;
     var that = this;
+    var user = {};
 
     this.doLogin = function(username, password) {
         var q = $q.defer();
@@ -13,7 +14,6 @@ angular.module('starter.services.userservice', [])
             data: {password: password,
                 identifier: username}
         }).then(function successCallback(response) {(
-            console.log(response),
                 that.token = "JWT "+response.data.token,
                 that.user = response.data.user);
             q.resolve(response.data);

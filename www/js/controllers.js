@@ -13,8 +13,8 @@ angular.module('starter.controllers', [])
   // Form data for the login modal
   $scope.loginData = {};
   $scope.registerData = {};
-  $scope.test = UserSrv.user;
-  $scope.token = UserSrv.token;  
+  $scope.user = UserSrv.user;
+  $scope.token = UserSrv.token;
 
   // Create the login modal that we will use later
   $ionicModal.fromTemplateUrl('templates/login.html', {
@@ -36,8 +36,6 @@ angular.module('starter.controllers', [])
   // Perform the login action when the user submits the login form
     $scope.doLogin = function() {
         UserSrv.doLogin($scope.loginData.username,$scope.loginData.password).then(function(data){
-            console.log('ok');
-            console.log(data);
             $state.go('app.user');
         },
             function(){
@@ -84,8 +82,10 @@ angular.module('starter.controllers', [])
 .controller('PlaylistCtrl', function($scope, $stateParams) {
 })
 
-.controller('User', function($scope, $ionicHistory) {
+.controller('User', function($scope, $ionicHistory,UserSrv) {
     console.log($scope.username);
+    $scope.user = UserSrv.user;
+    $scope.token = UserSrv.token;
 })
 
 .controller('signupCtrl', function($scope) {
@@ -107,4 +107,5 @@ angular.module('starter.controllers', [])
 
   };
   $scope.getUsers();
+
 });
